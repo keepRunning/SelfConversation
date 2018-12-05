@@ -1,12 +1,12 @@
 .main {
     display: flex;
     flex-direction: column;
-    height: 95vh;
-    overflow-y: scroll;
+    height: 100vh;
 
     .header {
         font-size: 1.5em;
-    font-family: cursive;
+        font-family: cursive;
+        margin-top: 0;
     }
 
     .conversations {
@@ -15,6 +15,7 @@
 
         .message-row {
             display: flex;
+            margin: .5em;
         }
     }
 }
@@ -30,9 +31,7 @@
 
 .talk-bar {
     display:flex;
-    // position: absolute;
-    // bottom: 2em;
-    // left: 0;
+    margin: 1em 0 1em 0;
     box-sizing: border-box; 
     width: 100%;
 
@@ -52,4 +51,10 @@
         margin:   0 0 0 1em;
         padding:  0 1em 0 1em;
     }
+}
+
+.conversation-group {
+    border: solid thin skyblue;
+    margin: 1em 0 1em 0;
+    border-radius: .6em;
 }

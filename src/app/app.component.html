@@ -1,19 +1,28 @@
 <div class="main">
   <p class="header">Self talk - Talk to yourself as counsellor-patient(alice-bob) </p>
-  <div class="conversations">
+  <div class="conversations" #Conversations [scrollTop]="Conversations.scrollHeight">
     <ng-container *ngFor="let msg of messages">
-      <p class="message-row">
-        <span class="person">{{person1}}: </span>
-        <span class="message">{{msg.alice}}</span>
-      </p>
-      <p *ngIf='msg.isComplete'>
-        <span class="person">{{person2}}: </span>
-        <span>{{msg.bob}}</span>
-      </p>
+      <div class="conversation-group" *ngIf="messages.length > 0 && msg === messages[messages.length-1]"
+        [@highlightMessage]="highlightLatestMessage ? 'highlighted' : 'normal'">
+          <ng-container *ngTemplateOutlet="conversationGroupTemplate"></ng-container>
+      </div>
+      <div class="conversation-group" *ngIf="messages.length > 0 && msg !== messages[messages.length-1]" >
+          <ng-container *ngTemplateOutlet="conversationGroupTemplate"></ng-container>
+      </div>
+      <ng-template #conversationGroupTemplate>
+          <p class="message-row">
+              <span class="person">{{person1}}: </span>
+              <span class="message">{{msg.alice}}</span>
+            </p>
+            <p class="message-row" *ngIf='msg.isComplete'>
+              <span class="person">{{person2}}: </span>
+              <span class="message">{{msg.bob}}</span>
+            </p>
+        </ng-template>
     </ng-container>
   </div>
   <div class="talk-bar">
-    <span class="person" [style.width.ch]= 'Math.max(person1.length, person2.length)'> 
+    <span class="person" [style.width.ch]='Math.max(person1.length, person2.length)'>
       {{messages.length === 0 || messages[messages.length-1].isComplete ? person1 : person2 }}
     </span>
     <textarea (keydown)="keydown($event)" [(ngModel)]="inputText" #InputText></textarea>
