@@ -1,20 +1,22 @@
-<p>Self talk - Talk to yourself as councellor-patient(alice-bob) </p>
-
-<ng-container *ngFor="let msg of messages">
-<p>
-  <span class="person">{{person1}}: </span>
-  <span>{{msg.alice}}</span>
-</p>
-<p *ngIf='msg.isComplete'>
-  <span class="person">{{person2}}: </span>
-  <span>{{msg.bob}}</span>
-</p>
-</ng-container>
-
-<div class="talk-bar">
-  <span class="person">
+<div class="main">
+  <p class="header">Self talk - Talk to yourself as counsellor-patient(alice-bob) </p>
+  <div class="conversations">
+    <ng-container *ngFor="let msg of messages">
+      <p class="message-row">
+        <span class="person">{{person1}}: </span>
+        <span class="message">{{msg.alice}}</span>
+      </p>
+      <p *ngIf='msg.isComplete'>
+        <span class="person">{{person2}}: </span>
+        <span>{{msg.bob}}</span>
+      </p>
+    </ng-container>
+  </div>
+  <div class="talk-bar">
+    <span class="person" [style.width.ch]= 'Math.max(person1.length, person2.length)'> 
       {{messages.length === 0 || messages[messages.length-1].isComplete ? person1 : person2 }}
-  </span>
-  <input type="text" (keydown)="keydown($event)" #MyWords >
-  <button type="button" (click)='addToConversation(MyWords.value)'>Say It</button>
+    </span>
+    <textarea (keydown)="keydown($event)" [(ngModel)]="inputText" #InputText></textarea>
+    <button type="button" (click)='addToConversation()'>Say It</button>
+  </div>
 </div>

@@ -1,8 +1,55 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    height: 95vh;
+    overflow-y: scroll;
+
+    .header {
+        font-size: 1.5em;
+    font-family: cursive;
+    }
+
+    .conversations {
+        flex: 1;
+        overflow-y: auto;
+
+        .message-row {
+            display: flex;
+        }
+    }
+}
+
 .person {
     font-weight: bold;
 }
 
+.message {
+    white-space: pre-wrap;
+    padding-left: .5em;
+}
+
 .talk-bar {
-    position: absolute;
-    bottom: 2em;
+    display:flex;
+    // position: absolute;
+    // bottom: 2em;
+    // left: 0;
+    box-sizing: border-box; 
+    width: 100%;
+
+    textarea {
+        flex: 1;
+        max-height: 4em;
+    }
+
+    span {
+        padding:  0 1em 0 .5em;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    button {
+        margin:   0 0 0 1em;
+        padding:  0 1em 0 1em;
+    }
 }
