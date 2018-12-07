@@ -2,6 +2,9 @@ import { Component, ElementRef, ViewChild, Input, OnInit } from '@angular/core';
 import { Message } from './message';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { timeout } from 'q';
+import { ActivatedRoute, UrlSegment, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-root',
@@ -27,15 +30,33 @@ export class AppComponent implements OnInit {
   public highlightLatestMessage;
   @ViewChild('InputText') public inputTextElementref: ElementRef;
 
-  public constructor() {
-    this.messages.push({ alice: 'Hi', bob: 'Hi there', isComplete: true });
-    this.messages.push({ alice: 'All good?', bob: 'Well, I want to talk to you about something', isComplete: true });
-    this.messages.push({ alice: 'go ahead..', bob: '', isComplete: false });
+  public constructor(private route: ActivatedRoute) {
+    console.log('activatedRoute', route);
 
+    // this.messages.push({ alice: 'Hi', bob: 'Hi there', isComplete: true });
+    // this.messages.push({ alice: 'All good?', bob: 'Well, I want to talk to you about something', isComplete: true });
+    // this.messages.push({ alice: 'go ahead..', bob: '', isComplete: false });
   }
 
   public ngOnInit(): void {
     this.inputTextElementref.nativeElement.focus();
+
+    let params = this.route.paramMap.pipe(switchMap((params: ParamMap) => {
+      let id = params.get('id')
+      console.log('id', id);
+      return id;
+    })
+    );
+
+    this.route.queryParams.subscribe((params) => {
+      console.log('params', params);
+    });
+
+    this.route.params.subscribe(params => {
+      console.log(params) //log the entire params object
+      console.log(params['id']) //log the value of id
+    });
+    console.log('params', params);
   }
 
   public keydown(k: any) {
@@ -63,7 +84,7 @@ export class AppComponent implements OnInit {
     this.highlightLatestMessage = true;
     setTimeout(() => {
       this.highlightLatestMessage = false;
-    },100);
+    }, 100);
   }
 
   private clearTextBox() {
