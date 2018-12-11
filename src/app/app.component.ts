@@ -2,8 +2,9 @@ import { Component, ElementRef, ViewChild, Input, OnInit } from '@angular/core';
 import { Message } from './message';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { timeout } from 'q';
-import { ActivatedRoute, UrlSegment, ParamMap } from '@angular/router';
+import { ActivatedRoute, UrlSegment, ParamMap, Router, Event, ActivationEnd } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -30,33 +31,19 @@ export class AppComponent implements OnInit {
   public highlightLatestMessage;
   @ViewChild('InputText') public inputTextElementref: ElementRef;
 
-  public constructor(private route: ActivatedRoute) {
+  public constructor(private route: ActivatedRoute, private router: Router) {
     console.log('activatedRoute', route);
 
-    // this.messages.push({ alice: 'Hi', bob: 'Hi there', isComplete: true });
-    // this.messages.push({ alice: 'All good?', bob: 'Well, I want to talk to you about something', isComplete: true });
-    // this.messages.push({ alice: 'go ahead..', bob: '', isComplete: false });
+    router.events.subscribe((e: Event) => {
+      // console.log(e);
+      if(e instanceof ActivationEnd)  {
+        console.log('ActivationEnd-params', e.snapshot.params);
+      }
+    });
   }
 
   public ngOnInit(): void {
     this.inputTextElementref.nativeElement.focus();
-
-    let params = this.route.paramMap.pipe(switchMap((params: ParamMap) => {
-      let id = params.get('id')
-      console.log('id', id);
-      return id;
-    })
-    );
-
-    this.route.queryParams.subscribe((params) => {
-      console.log('params', params);
-    });
-
-    this.route.params.subscribe(params => {
-      console.log(params) //log the entire params object
-      console.log(params['id']) //log the value of id
-    });
-    console.log('params', params);
   }
 
   public keydown(k: any) {

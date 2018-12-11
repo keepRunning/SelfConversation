@@ -12,7 +12,7 @@ let routes: Routes = [
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule, RouterModule.forRoot(routes),
+    CommonModule, RouterModule.forRoot(routes,{ enableTracing: false}),
   ],
   exports: [ RouterModule ]
 })
