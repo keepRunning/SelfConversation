@@ -1,4 +1,4 @@
-@if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
+::@if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
 
 :: ----------------------
 :: KUDU Deployment Script
@@ -97,21 +97,27 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 :: 2. Select node version
 call :SelectNodeVersion
 
+@echo Deployment Target path #55
+@echo %DEPLOYMENT_TARGET%
+
 :: 3. Install npm packages
 IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
+  @echo deployment path exists #66
+  @echo :ExecuteCmd !NPM_CMD! install --production
   pushd "%DEPLOYMENT_TARGET%"
   call :ExecuteCmd !NPM_CMD! install --production
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
 )
 
-:: 3. Angular Prod Build
-IF EXIST "%DEPLOYMENT_SOURCE%/.angular-cli.json" (
-echo Building App in %DEPLOYMENT_SOURCE%…
-pushd "%DEPLOYMENT_SOURCE%"
-call :ExecuteCmd !NPM_CMD! run build
+:: 4. Angular Prod Build
+IF EXIST "%DEPLOYMENT_TARGET%\angular.json" (
+echo Building App in %DEPLOYMENT_TARGET%…
+pushd "%DEPLOYMENT_TARGET%"
+@echo deployment path angular cli exists #77
+::call :ExecuteCmd !NPM_CMD! run build
 :: If the above command fails comment above and uncomment below one
-:: call ./node_modules/.bin/ng build –prod
+call ./node_modules/.bin/ng build --prod
 IF !ERRORLEVEL! NEQ 0 goto error
 popd
 )
