@@ -122,6 +122,17 @@ IF !ERRORLEVEL! NEQ 0 goto error
 popd
 )
 
+:: 5. Run server.js
+IF EXIST "%DEPLOYMENT_TARGET%\server.js" (
+echo Building App in %DEPLOYMENT_TARGET%…
+pushd "%DEPLOYMENT_TARGET%"
+@echo deployment path angular cli exists #77
+::call :ExecuteCmd !NPM_CMD! run build
+:: If the above command fails comment above and uncomment below one
+call node server.js
+IF !ERRORLEVEL! NEQ 0 goto error
+popd
+)
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 goto end
 
