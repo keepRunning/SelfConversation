@@ -113,20 +113,23 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
 :: 4. Angular Prod Build
 IF EXIST "%DEPLOYMENT_TARGET%\angular.json" (
 echo Building App in %DEPLOYMENT_TARGET%
+echo current dir %pwd%
 pushd "%DEPLOYMENT_TARGET%"
 @echo deployment path angular cli exists #77
 ::call :ExecuteCmd !NPM_CMD! run build
 :: If the above command fails comment above and uncomment below one
-call ./node_modules/.bin/ng build --prod
+:: call ./node_modules/.bin/ng build --prod
+call node_modules/.bin/ng build --prod
 IF !ERRORLEVEL! NEQ 0 goto error
 popd
 )
+::4. End **********************
 
 :: 5. Run server.js
 IF EXIST "%DEPLOYMENT_TARGET%\server.js" (
 echo Building App in %DEPLOYMENT_TARGET%…
 pushd "%DEPLOYMENT_TARGET%"
-@echo deployment path angular cli exists #77
+@echo deployment path angular cli exists #88
 ::call :ExecuteCmd !NPM_CMD! run build
 :: If the above command fails comment above and uncomment below one
 call node server.js
