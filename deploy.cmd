@@ -111,28 +111,34 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   popd
 )
 
-:: 4. Angular Prod Build
+:: 4. Angular CLI Install
 IF EXIST "%DEPLOYMENT_TARGET%\angular.json" (
 echo Building App in %DEPLOYMENT_TARGET%
 echo new path "%DEPLOYMENT_TARGET%\node_modules\.bin"
 pushd "%DEPLOYMENT_TARGET%\node_modules\.bin"
-echo current-dir %cd%
 @echo deployment path angular cli exists #77
-::call :ExecuteCmd !NPM_CMD! run build
-:: If the above command fails comment above and uncomment below one
-:: call ./node_modules/.bin/ng build --prod
-:: call ng build --prod
 call :ExecuteCmd !NPM_CMD! install -g @angular/cli
 IF !ERRORLEVEL! NEQ 0 goto error
 popd
 )
 ::4. End **********************
 
+:: 5. Angular Prod Build
+IF EXIST "%DEPLOYMENT_TARGET%\angular.json" (
+@echo Building app
+pushd "%DEPLOYMENT_TARGET%"
+@echo deployment path angular cli exists #88
+call :ExecuteCmd !NPM_CMD! run build --prod
+IF !ERRORLEVEL! NEQ 0 goto error
+popd
+)
+@echo 5.End **********************
+
 :: 5. Run server.js
 IF EXIST "%DEPLOYMENT_TARGET%\server.js" (
 echo Building App in %DEPLOYMENT_TARGET%…
 pushd "%DEPLOYMENT_TARGET%"
-@echo deployment path angular cli exists #88
+@echo deployment path angular cli exists #99
 ::call :ExecuteCmd !NPM_CMD! run build
 :: If the above command fails comment above and uncomment below one
 call node server.js
