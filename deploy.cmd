@@ -113,9 +113,9 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
 :: 4. Angular Prod Build
 IF EXIST "%DEPLOYMENT_TARGET%\angular.json" (
 echo Building App in %DEPLOYMENT_TARGET%
-echo current dir %pwd%
 echo new path "%DEPLOYMENT_TARGET%\node_modules\.bin"
 pushd "%DEPLOYMENT_TARGET%\node_modules\.bin"
+echo current-dir %cd%
 @echo deployment path angular cli exists #77
 ::call :ExecuteCmd !NPM_CMD! run build
 :: If the above command fails comment above and uncomment below one
