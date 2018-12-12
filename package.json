@@ -4,7 +4,7 @@
   "engines" : { "node" : ">=8.11.3" },
   "scripts": {
     "ng": "ng",
-    "start": "node_modules/.bin/ng build --prod",
+    "start": "node ./node_modules/.bin/ng build --prod",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
