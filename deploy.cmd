@@ -105,6 +105,7 @@ IF EXIST "%DEPLOYMENT_TARGET%\package.json" (
   @echo deployment path exists #66
   @echo :ExecuteCmd !NPM_CMD! install
   pushd "%DEPLOYMENT_TARGET%"
+  echo current-dir #66** %cd%
   call :ExecuteCmd !NPM_CMD! install
   IF !ERRORLEVEL! NEQ 0 goto error
   popd
