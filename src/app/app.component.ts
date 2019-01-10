@@ -5,6 +5,7 @@ import { timeout } from 'q';
 import { ActivatedRoute, UrlSegment, ParamMap, Router, Event, ActivationEnd } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { IndexedDBHelper } from './app-indexedDB-helper.';
 
 
 @Component({
@@ -29,7 +30,10 @@ export class AppComponent implements OnInit {
   public inputText;
   public Math = Math;
   public highlightLatestMessage;
+  public indexedDBHelper = new IndexedDBHelper();
   @ViewChild('InputText') public inputTextElementref: ElementRef;
+
+  private messageCounter: number = 0;
 
   public constructor(private route: ActivatedRoute, private router: Router) {
     console.log('activatedRoute', route);
@@ -40,6 +44,8 @@ export class AppComponent implements OnInit {
         console.log('ActivationEnd-params', e.snapshot.params);
       }
     });
+
+    this.indexedDBHelper.initializeDB();
   }
 
   public ngOnInit(): void {
@@ -63,13 +69,20 @@ export class AppComponent implements OnInit {
     if (this.messages.length === 0 || this.messages[this.messages.length - 1].isComplete) {
       let m = new Message();
       m.alice = this.inputText;
+      m.messageId = this.messageCounter++;
       this.messages.push(m);
-
     } else {
       let m = this.messages[this.messages.length - 1];
       m.bob = this.inputText;
       m.isComplete = true;
+
+      this.indexedDBHelper.saveMessage(this.messages).then((res) => {
+        this.indexedDBHelper.getData().then((res2) => {
+          console.log('Retrieved data', res2);
+        });
+      });
     }
+
     this.clearTextBox();
     this.highlightLatestMessage = true;
     setTimeout(() => {
