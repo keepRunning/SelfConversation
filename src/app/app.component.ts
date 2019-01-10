@@ -44,6 +44,9 @@ export class AppComponent implements OnInit {
 
   public ngOnInit(): void {
     this.inputTextElementref.nativeElement.focus();
+
+    (window as any).messages = this.messages;
+    console.log('********** messages object avilable. check this.messages', this.messages);
   }
 
   public keydown(k: any) {
