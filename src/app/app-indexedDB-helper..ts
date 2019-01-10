@@ -7,30 +7,36 @@ export class IndexedDBHelper {
     private db;
 
     public initializeDB() {
-        if (!window.indexedDB) {
-            console.log('Your browser does not support a stable version of IndexedDB. Such and such feature will not be available.');
-            return;
-        }
+        return new Promise((resolveFn, rejectFn) => {
+            if (!window.indexedDB) {
+                console.log('Your browser does not support a stable version of IndexedDB. Such and such feature will not be available.');
+                rejectFn();
+                return;
+            }
 
-        let request = window.indexedDB.open('MyTestDatabase3', 1);
-        request.onsuccess = (ev) => {
-            console.log('onsuccess', ev);
-            this.db = (<any> event.target).result;
-            console.log('db', this.db);
-        };
-        request.onerror = (ev) => {
-            console.log('onerror', ev);
-        };
-        request.onupgradeneeded = (ev) => {
-            console.log('onUpgradeNeeded', ev);
-            this.db = (<any> event.target).result;
-            this.objectStore = this.db.createObjectStore('conversations', { keyPath: 'name' });
-        };
+            let request = window.indexedDB.open('MyTestDatabase3', 1);
+            request.onsuccess = (ev) => {
+                // console.log('onsuccess', ev);
+                this.db = (<any> event.target).result;
+                // console.log('db', this.db);
+                resolveFn();
+            };
+            request.onerror = (ev) => {
+                console.log('onerror', ev);
+                rejectFn();
+            };
+            request.onupgradeneeded = (ev) => {
+                console.log('onUpgradeNeeded', ev);
+                this.db = (<any> event.target).result;
+                this.objectStore = this.db.createObjectStore('conversations', { keyPath: 'name' });
+                resolveFn();
+            };
+        });
     }
 
-    public saveMessage(messageObject: any) {
+    public saveMessage(messageObject: any, key: string = 'test') {
         return new Promise((resolveFn, rejectFn) => {
-            let obj = { messageObject, name: 'test' };
+            let obj = { messageObject, name: key };
             console.log('saveMessage', this.db, obj);
             let objectStoreInstance = this.db.transaction('conversations', 'readwrite').objectStore('conversations');
             let r1 = objectStoreInstance.add(obj);
@@ -55,11 +61,11 @@ export class IndexedDBHelper {
         });
     }
 
-    public getData(name: string = 'test') {
+    public getData(key: string = 'test') {
         return new Promise((resolveFn, rejectFn) => {
             let transaction = this.db.transaction(['conversations']);
             let myObjStore = transaction.objectStore('conversations');
-            let request = myObjStore.get(name);
+            let request = myObjStore.get(key);
     
             request.onsuccess = (ev) => {
                 // console.log('onsuccess', ev, (<any> event.target).result);
