@@ -5,6 +5,7 @@ import { timeout } from 'q';
 import { ActivatedRoute, UrlSegment, ParamMap, Router, Event, ActivationEnd } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { IndexedDBHelper } from './app-indexedDB-helper.';
 
 
 @Component({
@@ -29,16 +30,31 @@ export class AppComponent implements OnInit {
   public inputText;
   public Math = Math;
   public highlightLatestMessage;
+  public indexedDBHelper = new IndexedDBHelper();
   @ViewChild('InputText') public inputTextElementref: ElementRef;
 
+  private messageCounter: number = 0;
+  private customString: string;
+
   public constructor(private route: ActivatedRoute, private router: Router) {
-    console.log('activatedRoute', route);
 
     router.events.subscribe((e: Event) => {
       // console.log(e);
       if(e instanceof ActivationEnd)  {
-        console.log('ActivationEnd-params', e.snapshot.params);
+        // console.log('ActivationEnd-params', e.snapshot.params);
+        if(e.snapshot.params && e.snapshot.params['id']) {
+          this.customString = e.snapshot.params['id'];
+        }
       }
+    });
+
+    this.indexedDBHelper.initializeDB().then(() => {
+      this.indexedDBHelper.getData(this.customString).then((res2: any) => {
+        console.log('Retrieved data - oninit', res2);
+        if(res2 && res2.messageObject) {
+          this.messages = res2.messageObject;
+        }
+      });
     });
   }
 
@@ -63,18 +79,26 @@ export class AppComponent implements OnInit {
     if (this.messages.length === 0 || this.messages[this.messages.length - 1].isComplete) {
       let m = new Message();
       m.alice = this.inputText;
+      m.messageId = this.messageCounter++;
       this.messages.push(m);
-
     } else {
       let m = this.messages[this.messages.length - 1];
       m.bob = this.inputText;
       m.isComplete = true;
+
+      this.indexedDBHelper.saveMessage(this.messages, this.customString);
     }
+
     this.clearTextBox();
     this.highlightLatestMessage = true;
     setTimeout(() => {
       this.highlightLatestMessage = false;
     }, 100);
+  }
+
+  public clearMessages() {
+    this.messages = [];
+    this.indexedDBHelper.saveMessage(this.messages, this.customString);
   }
 
   private clearTextBox() {

@@ -9,6 +9,11 @@ let routes: Routes = [
   { path: 'selfTalk/:id', component: AppComponent },
 ];
 
+// let routes: Routes = [
+//   { path: '', component: AppComponent, pathMatch: 'full' },
+//   { path: ':id', component: AppComponent },
+// ];
+
 @NgModule({
   declarations: [],
   imports: [

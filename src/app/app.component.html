@@ -1,5 +1,9 @@
 <div class="main">
-  <p class="header">Self talk - Talk to yourself as counsellor-patient(alice-bob) </p>
+  <div class="header">
+      <p>Self talk - Talk to yourself as counsellor-patient(alice-bob) </p>
+      <button type="button" (click)="clearMessages()">Clear</button>
+  </div>
+  
   <div class="conversations" #Conversations [scrollTop]="Conversations.scrollHeight">
     <ng-container *ngFor="let msg of messages">
       <div class="conversation-group" *ngIf="messages.length > 0 && msg === messages[messages.length-1]"
