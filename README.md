@@ -4,7 +4,6 @@ Use this to make a two person conversation with yourself - Simple tool to intros
 
 
 
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
 
 ## Development server
