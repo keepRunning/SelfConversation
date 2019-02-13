@@ -4,7 +4,7 @@
       <button type="button" (click)="clearMessages()">Clear</button>
   </div>
   
-  <div class="conversations" #Conversations [scrollTop]="Conversations.scrollHeight">
+  <div class="conversations" #Conversations>
     <ng-container *ngFor="let msg of messages">
       <div class="conversation-group" *ngIf="messages.length > 0 && msg === messages[messages.length-1]"
         [@highlightMessage]="highlightLatestMessage ? 'highlighted' : 'normal'">

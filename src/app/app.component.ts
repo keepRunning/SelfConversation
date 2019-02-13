@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
   public highlightLatestMessage;
   public indexedDBHelper = new IndexedDBHelper();
   @ViewChild('InputText') public inputTextElementref: ElementRef;
+  @ViewChild('Conversations') private divConversations: ElementRef;
 
   private messageCounter: number = 0;
   private customString: string;
@@ -40,9 +41,9 @@ export class AppComponent implements OnInit {
 
     router.events.subscribe((e: Event) => {
       // console.log(e);
-      if(e instanceof ActivationEnd)  {
+      if (e instanceof ActivationEnd) {
         // console.log('ActivationEnd-params', e.snapshot.params);
-        if(e.snapshot.params && e.snapshot.params['id']) {
+        if (e.snapshot.params && e.snapshot.params['id']) {
           this.customString = e.snapshot.params['id'];
         }
       }
@@ -51,8 +52,11 @@ export class AppComponent implements OnInit {
     this.indexedDBHelper.initializeDB().then(() => {
       this.indexedDBHelper.getData(this.customString).then((res2: any) => {
         console.log('Retrieved data - oninit', res2);
-        if(res2 && res2.messageObject) {
+        if (res2 && res2.messageObject) {
           this.messages = res2.messageObject;
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 200);
         }
       });
     });
@@ -86,9 +90,12 @@ export class AppComponent implements OnInit {
       m.bob = this.inputText;
       m.isComplete = true;
 
-      this.indexedDBHelper.saveMessage(this.messages, this.customString);
+      this.indexedDBHelper.saveMessage(this.messages, this.customString);      
     }
 
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 100);
     this.clearTextBox();
     this.highlightLatestMessage = true;
     setTimeout(() => {
@@ -103,5 +110,11 @@ export class AppComponent implements OnInit {
 
   private clearTextBox() {
     this.inputTextElementref.nativeElement.value = '';
+  }
+
+  private scrollToBottom() {
+    try {
+      this.divConversations.nativeElement.scrollTop = this.divConversations.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 }
