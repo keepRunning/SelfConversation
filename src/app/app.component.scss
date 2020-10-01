@@ -1,7 +1,10 @@
+body {
+    overflow: hidden;
+}
 .main {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100vh - 16px);
 
     .header {
         display: flex;
@@ -43,6 +46,7 @@
     textarea {
         flex: 1;
         max-height: 4em;
+        min-height: 4em;
     }
 
     span {

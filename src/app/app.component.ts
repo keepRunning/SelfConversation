@@ -63,7 +63,9 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.inputTextElementref.nativeElement.focus();
+    if (this.inputTextElementref) {
+      this.inputTextElementref.nativeElement.focus();
+    }
 
     (window as any).messages = this.messages;
     console.log('********** messages object avilable. check this.messages', this.messages);
@@ -90,7 +92,7 @@ export class AppComponent implements OnInit {
       m.bob = this.inputText;
       m.isComplete = true;
 
-      this.indexedDBHelper.saveMessage(this.messages, this.customString);      
+      this.indexedDBHelper.saveMessage(this.messages, this.customString);
     }
 
     setTimeout(() => {
