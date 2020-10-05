@@ -1,6 +1,7 @@
 <div class="main">
   <div class="header">
-      <p>Self talk - Talk to yourself as counsellor-patient(alice-bob) </p>
+      <p>Self talk - Talk to yourself as counsellor-patient(alice-bob)</p>
+      <div>Topic: <input type="text" (change)="updateRoute($event.target.value); $event.target.value=''"></div>
       <button type="button" (click)="clearMessages()">Clear</button>
   </div>
   

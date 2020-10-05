@@ -1,7 +1,7 @@
 # AppSelftalk
 
 Use this to make a two person conversation with yourself - Simple tool to introspect that I have found useful
-https://keeprunning.github.io/SelfConversation/
+https://keeprunning.github.io/selfTalk
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.1.
 

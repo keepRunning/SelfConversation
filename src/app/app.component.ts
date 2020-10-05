@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   @ViewChild('Conversations') private divConversations: ElementRef;
 
   private messageCounter: number = 0;
-  private customString: string;
+  private customString: string = 'default';
 
   public constructor(private route: ActivatedRoute, private router: Router) {
 
@@ -45,21 +45,15 @@ export class AppComponent implements OnInit {
         // console.log('ActivationEnd-params', e.snapshot.params);
         if (e.snapshot.params && e.snapshot.params['id']) {
           this.customString = e.snapshot.params['id'];
+          console.log('customString', this.customString);
+          this.retrieveData();
         }
       }
     });
-
     this.indexedDBHelper.initializeDB().then(() => {
-      this.indexedDBHelper.getData(this.customString).then((res2: any) => {
-        console.log('Retrieved data - oninit', res2);
-        if (res2 && res2.messageObject) {
-          this.messages = res2.messageObject;
-          setTimeout(() => {
-            this.scrollToBottom();
-          }, 200);
-        }
-      });
+      this.retrieveData();
     });
+
   }
 
   public ngOnInit(): void {
@@ -108,6 +102,24 @@ export class AppComponent implements OnInit {
   public clearMessages() {
     this.messages = [];
     this.indexedDBHelper.saveMessage(this.messages, this.customString);
+  }
+
+  public updateRoute(subRoute: string) {
+    this.router.navigate([subRoute], { relativeTo: this.route });
+  }
+
+  public retrieveData() {
+    this.indexedDBHelper.getData(this.customString).then((res2: any) => {
+      console.log('Retrieved data - oninit', res2);
+      if (res2 && res2.messageObject) {
+        this.messages = res2.messageObject;
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 200);
+      } else {
+        this.messages = [];
+      }
+    });
   }
 
   private clearTextBox() {
